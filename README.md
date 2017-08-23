@@ -4,7 +4,7 @@
 
 I decided to learn [Go](https://golang.org) because it's 2017 and interpreted languages
 have fallen out of vogue. To that end, I started by writing a simple filter to replace
-[smart quotes](smart quotes about love) with their dumb cousins. And thus, inverted-commas
+[smart quotes](http://practicaltypography.com/straight-and-curly-quotes.html) with their dumb cousins. And thus, inverted-commas
 (`ic`) was born.
 
 ## Caveat Lector!
