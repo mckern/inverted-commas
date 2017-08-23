@@ -23,9 +23,18 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"path"
 	"regexp"
+
+	flag "github.com/spf13/pflag"
 )
 
+// Basic information about `ic` itself
+var /* const */ versionNumber = "0.0.1"
+var /* const */ whoami = path.Base(os.Args[0])
+var /* const */ version = fmt.Sprintf("%s (inverted-commas) %s", whoami, versionNumber)
+
+// The regexes used to identify curly quotes
 var /* const */ doubleQuotes = regexp.MustCompile("[\u201d\u201e\u201f\u2033\u2036]")
 var /* const */ singleQuotes = regexp.MustCompile("[\u2018\u2019\u201a\u201b\u2032\u2035]")
 
@@ -39,7 +48,7 @@ func stdinIsEmpty() (value bool, err error) {
 }
 
 func quitOnStderr(msg string) {
-	fmt.Fprintln(os.Stderr, "reading standard input:", msg)
+	flag.Usage()
 	os.Exit(1)
 }
 
@@ -49,11 +58,38 @@ func replaceCurlyQuotes(str string) string {
 	return fixedStr
 }
 
-func main() {
-	if _, err := stdinIsEmpty(); err != nil {
-		quitOnStderr(err.Error())
+func init() {
+	var versionFlag bool
+	var helpFlag bool
+
+	flag.BoolVarP(&helpFlag, "help", "h", false, "show this help")
+	flag.BoolVarP(&versionFlag, "version", "v", false, "print version number")
+
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, "Usage: %s [-hv]\n", whoami)
+		flag.PrintDefaults()
 	}
 
+	flag.Parse()
+
+	if helpFlag {
+		fmt.Fprintf(os.Stderr, "%s: scan text across STDIN and replace \"smart\" (curly) quotes\n\n", whoami)
+		flag.Usage()
+		os.Exit(0)
+	}
+
+	if versionFlag {
+		fmt.Println(version)
+		os.Exit(0)
+	}
+
+	_, err := stdinIsEmpty()
+	if err != nil {
+		quitOnStderr(err.Error())
+	}
+}
+
+func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for scanner.Scan() {
