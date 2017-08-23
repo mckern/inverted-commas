@@ -26,8 +26,8 @@ import (
 	"regexp"
 )
 
-var /* const */ DoubleQuotes = regexp.MustCompile("[\u201d\u201e\u201f\u2033\u2036]")
-var /* const */ SingleQuotes = regexp.MustCompile("[\u2018\u2019\u201a\u201b\u2032\u2035]")
+var /* const */ doubleQuotes = regexp.MustCompile("[\u201d\u201e\u201f\u2033\u2036]")
+var /* const */ singleQuotes = regexp.MustCompile("[\u2018\u2019\u201a\u201b\u2032\u2035]")
 
 func stdinIsEmpty() (value bool, err error) {
 	stat, _ := os.Stdin.Stat()
@@ -44,8 +44,8 @@ func quitOnStderr(msg string) {
 }
 
 func replaceCurlyQuotes(str string) string {
-	fixedStr := DoubleQuotes.ReplaceAllString(str, "\"")
-	fixedStr = SingleQuotes.ReplaceAllString(fixedStr, "'")
+	fixedStr := doubleQuotes.ReplaceAllString(str, "\"")
+	fixedStr = singleQuotes.ReplaceAllString(fixedStr, "'")
 	return fixedStr
 }
 
