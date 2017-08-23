@@ -23,8 +23,11 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strings"
+	"regexp"
 )
+
+var /* const */ DoubleQuotes = regexp.MustCompile("[\u201d\u201e\u201f\u2033\u2036]")
+var /* const */ SingleQuotes = regexp.MustCompile("[\u2018\u2019\u201a\u201b\u2032\u2035]")
 
 func stdinIsEmpty() (value bool, err error) {
 	stat, _ := os.Stdin.Stat()
@@ -40,6 +43,12 @@ func quitOnStderr(msg string) {
 	os.Exit(1)
 }
 
+func replaceCurlyQuotes(str string) string {
+	fixedStr := DoubleQuotes.ReplaceAllString(str, "\"")
+	fixedStr = SingleQuotes.ReplaceAllString(fixedStr, "'")
+	return fixedStr
+}
+
 func main() {
 	if _, err := stdinIsEmpty(); err != nil {
 		quitOnStderr(err.Error())
@@ -48,7 +57,7 @@ func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for scanner.Scan() {
-		fmt.Println(strings.ToUpper(scanner.Text()))
+		fmt.Println(replaceCurlyQuotes(scanner.Text()))
 	}
 
 	if err := scanner.Err(); err != nil {
