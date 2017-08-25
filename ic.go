@@ -8,7 +8,7 @@
 //   u201f : ‟
 //   u2033 : ″
 //   u2036 : ‶
-//
+// \u201c
 // single smart quote
 //   u2018 : ‘
 //   u2019 : ’
@@ -52,10 +52,8 @@ func quitOnStderr(msg string) {
 	os.Exit(1)
 }
 
-func replaceCurlyQuotes(str string) string {
-	fixedStr := doubleQuotes.ReplaceAllString(str, "\"")
-	fixedStr = singleQuotes.ReplaceAllString(fixedStr, "'")
-	return fixedStr
+func replaceCurlyQuotes(str string, exp *regexp.Regexp, char string) string {
+	return exp.ReplaceAllString(str, char)
 }
 
 func init() {
@@ -93,7 +91,7 @@ func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for scanner.Scan() {
-		fmt.Println(replaceCurlyQuotes(scanner.Text()))
+		fmt.Println(replaceCurlyQuotes(replaceCurlyQuotes(scanner.Text(), doubleQuotes, `"`), singleQuotes, `'`))
 	}
 
 	if err := scanner.Err(); err != nil {
