@@ -1,15 +1,12 @@
 ---
 language: go
 sudo: false
-global:
-    - GOPATH="${TRAVIS_BUILD_DIR}/_workspace:$GOPATH"
-    - PATH="${TRAVIS_BUILD_DIR}/_workspace/bin:$PATH"
 go:
     - 1.8
 before_script:
     - go fmt ./...
     - go vet ./...
 script:
-    - go test  -v
+    - go test -cover -race ./...
 notifications:
     email: false
