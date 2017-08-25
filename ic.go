@@ -21,7 +21,9 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
+	"io"
 	"os"
 	"path"
 	"regexp"
@@ -38,16 +40,18 @@ var /* const */ version = fmt.Sprintf("%s (inverted-commas) %s", whoami, version
 var /* const */ doubleQuotes = regexp.MustCompile("[\u201d\u201e\u201f\u2033\u2036]")
 var /* const */ singleQuotes = regexp.MustCompile("[\u2018\u2019\u201a\u201b\u2032\u2035]")
 
-func stdinIsEmpty() (value bool, err error) {
-	stat, _ := os.Stdin.Stat()
-	if (stat.Size()) > 0 {
-		return true, nil
+func validateInput(input io.Reader) (value io.Reader, err error) {
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(input)
+
+	if (buf.Len()) > 0 {
+		return bytes.NewReader(buf.Bytes()), nil
 	}
 
-	return false, fmt.Errorf("Stdin is empty")
+	return nil, fmt.Errorf("input is empty")
 }
 
-func quitOnStderr(msg string) {
+func quit(msg string) {
 	flag.Usage()
 	os.Exit(1)
 }
@@ -80,21 +84,21 @@ func init() {
 		fmt.Println(version)
 		os.Exit(0)
 	}
-
-	_, err := stdinIsEmpty()
-	if err != nil {
-		quitOnStderr(err.Error())
-	}
 }
 
 func main() {
-	scanner := bufio.NewScanner(os.Stdin)
+	buffer, err := validateInput(os.Stdin)
+	if err != nil {
+		quit(err.Error())
+	}
+
+	scanner := bufio.NewScanner(buffer)
 
 	for scanner.Scan() {
 		fmt.Println(replaceCurlyQuotes(replaceCurlyQuotes(scanner.Text(), doubleQuotes, `"`), singleQuotes, `'`))
 	}
 
 	if err := scanner.Err(); err != nil {
-		quitOnStderr(err.Error())
+		quit(err.Error())
 	}
 }
