@@ -1,0 +1,16 @@
+---
+language: go
+sudo: false
+env:
+    - GOPATH="${TRAVIS_BUILD_DIR}/_workspace:$GOPATH"
+    - PATH="${TRAVIS_BUILD_DIR}/_workspace/bin:$PATH"
+go:
+    - 1.8
+    - tip
+before_script:
+    - go fmt ./...
+    - go vet ./...
+script:
+    - go test  -v
+notifications:
+    email: false
