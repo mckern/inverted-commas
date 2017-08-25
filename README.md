@@ -2,9 +2,7 @@
 
 ## Dumb up smart quotes with a simple plaintext filter
 
-
 ![Travis build status](https://travis-ci.org/mckern/inverted-commas.svg?branch=master)
-
 
 I decided to learn [Go](https://golang.org) because it's 2017 and interpreted languages
 have fallen out of vogue. To that end, I started by writing a simple filter to replace
@@ -23,9 +21,9 @@ than Ruby or Bash.
 `ic` is meant to be run as a simple [plaintext filter](https://en.wikipedia.org/wiki/Pipeline_(Unix)),
 accepting input from `STDIN` and printing processed input back across `STDOUT`:
 
-```
-$ echo \‟This was some fancy text\” | ./ic
-"This was some fancy text"
+```plaintext
+$ echo \‟This was some fancy text\”, wasn\’t it\? | ./ic
+"This was some fancy text", wasn't it?
 ```
 
 ## License
