@@ -31,7 +31,7 @@ import (
 )
 
 // Basic information about `ic` itself
-var versionNumber = "0.0.1"
+var versionNumber = "0.0.2"
 var whoami = path.Base(os.Args[0])
 var version = fmt.Sprintf("%s (inverted-commas) %s", whoami, versionNumber)
 
