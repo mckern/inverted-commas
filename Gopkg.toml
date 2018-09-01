@@ -1,0 +1,7 @@
+[[constraint]]
+  name = "github.com/spf13/pflag"
+  version = "v1.0.2"
+
+[[constraint]]
+  name = "github.com/andrew-d/go-termutil"
+  revision = "009166a695a2f516c749a26b4ac1f183d89aa336"
